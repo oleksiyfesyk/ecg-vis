@@ -23,9 +23,7 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 #app = dash.Dash('app', server=server)
 
 VALID_USERNAME_PASSWORD_PAIRS = [
-	['iurii', 'iurii'],
-	['anna', 'anna'],
-	['alex', 'alex']
+    ['iurii', 'iurii']
 ]
 
 app = dash.Dash('auth', server=server)
