@@ -1,9 +1,3 @@
-VALID_USERNAME_PASSWORD_PAIRS = [
-    ['iurii', 'iurii'],
-	['anna', 'anna'],
-	['alex', 'alex']
-]
-
 import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
@@ -26,8 +20,9 @@ import plotly.tools as tls
 server = flask.Flask('app')
 server.secret_key = os.environ.get('secret_key', 'secret')
 
-
 #app = dash.Dash('app', server=server)
+
+VALID_USERNAME_PASSWORD_PAIRS = [['iurii', 'iurii'], ['anna', 'anna'], ['alex', 'alex']]
 
 app = dash.Dash('auth', server=server)
 
@@ -38,9 +33,6 @@ auth = dash_auth.BasicAuth(
 
 app.scripts.config.serve_locally = False
 dcc._js_dist[0]['external_url'] = 'https://cdn.plot.ly/plotly-basic-latest.min.js'
-
-
-
 
 
 app.layout = html.Div([
