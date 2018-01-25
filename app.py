@@ -13,10 +13,7 @@ import wfdb
 import plotly.tools as tls
 import matplotlib
 matplotlib.use('Agg')
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-import tkinter
-import _tkinter
 
 # Keep this out of source code repository - save in a file or a database
 VALID_USERNAME_PASSWORD_PAIRS = [
