@@ -15,6 +15,11 @@ import plotly
 import wfdb
 import plotly.tools as tls
 
+VALID_USERNAME_PASSWORD_PAIRS = [
+    ['iurii', 'iurii'],
+	['alex','alex'],
+	['anna','anna']
+]
 
 
 server = flask.Flask('app')
@@ -22,11 +27,6 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 
 #app = dash.Dash('app', server=server)
 
-VALID_USERNAME_PASSWORD_PAIRS = [
-    ['iurii', 'iurii'],
-	['alex','alex'],
-	['anna','anna']
-]
 
 app = dash.Dash('auth', server=server)
 
