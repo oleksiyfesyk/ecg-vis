@@ -7,13 +7,15 @@ import dash_auth
 #from datetime import datetime as dt
 import flask
 #import time
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import os
 import plotly
 import wfdb
 import plotly.tools as tls
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+
+
 
 # Keep this out of source code repository - save in a file or a database
 VALID_USERNAME_PASSWORD_PAIRS = [
