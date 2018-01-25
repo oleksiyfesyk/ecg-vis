@@ -3,13 +3,13 @@ from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_auth
-from pandas_datareader import data as web
-from datetime import datetime as dt
+#from pandas_datareader import data as web
+#from datetime import datetime as dt
 import flask
-import time
+#import time
 import os
 import plotly
-
+import wfdb
 
 
 # Keep this out of source code repository - save in a file or a database
@@ -37,43 +37,36 @@ dcc._js_dist[0]['external_url'] = 'https://cdn.plot.ly/plotly-basic-latest.min.j
 
 
 app.layout = html.Div([
-	html.H1('Welcome to the app'),
-    html.H3('You are successfully authorized'),
-    html.H1('Stock Tickers'),
+	html.H2('Welcome to the app'),
+    html.H4('You are successfully authorized'),
+    html.H1('MIT-BIH Arrhythmia'),
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Coke', 'value': 'COKE'},
-            {'label': 'Tesla', 'value': 'TSLA'},
-            {'label': 'Samsung', 'value': 'AAPL'}
+            {'label': 'Subject 100', 'value': '100'},
+            {'label': 'Subject 101', 'value': '101'},
+            {'label': 'Subject 102', 'value': '102'},
+			{'label': 'Subject 103', 'value': '103'},
+			{'label': 'Subject 104', 'value': '104'}
         ],
-        value='COKE'
+        value='100'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
 
 @app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
-    df = web.DataReader(
-        selected_dropdown_value, data_source='google',
-        start=dt(2017, 1, 1), end=dt.now())
+
+	record = wfdb.rdsamp(os.path.realpath('.') + '\\sampledata\\' + selected_dropdown_value, sampto = 3500)
+	annotation = wfdb.rdann(os.path.realpath('.') + '\\sampledata\\' + selected_dropdown_value, 'atr', sampto = 3500)
+	
     return {
-        'data': [{
-            'x': df.index,
-            'y': df.Close,
-            'line': {
-                'width': 3,
-                'shape': 'spline'
-            }
-        }],
-        'layout': {
-            'margin': {
-                'l': 30,
-                'r': 20,
-                'b': 30,
-                't': 20
-            }
-        }
+        wfdb.plotrec(record,
+             annotation = annotation,
+             title='Record ' + selected_dropdown_value + 'from MIT-BIH Arrhythmia Database',
+             timeunits = 'seconds',
+             figsize = (15,7),
+             ecggrids = 'all')
     }
 
 
