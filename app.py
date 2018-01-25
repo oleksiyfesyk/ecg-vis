@@ -50,8 +50,8 @@ app.layout = html.Div([
         id='my-dropdown',
         options=[
             {'label': 'Subject 100', 'value': 'aami3a'}
-#            {'label': 'Subject 101', 'value': '101'},
-#            {'label': 'Subject 102', 'value': '102'},
+            {'label': 'Subject 101', 'value': 'aami3b'},
+            {'label': 'Subject 102', 'value': 'aami3c'},
 #			{'label': 'Subject 103', 'value': '103'},
 #			{'label': 'Subject 104', 'value': '104'}
         ],
@@ -66,7 +66,7 @@ def update_graph(selected_dropdown_value):
 	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 3500)
 #	annotation = wfdb.rdann(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, 'atr', sampto = 3500)
 #	annotation = annotation, 
-	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + 'from MIT-BIH Arrhythmia Database', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
+	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
 
 
 
