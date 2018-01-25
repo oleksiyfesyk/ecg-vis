@@ -17,14 +17,15 @@ import plotly.tools as tls
 
 
 
+server = flask.Flask('app')
+server.secret_key = os.environ.get('secret_key', 'secret')
+
+
 # Keep this out of source code repository - save in a file or a database
 VALID_USERNAME_PASSWORD_PAIRS = [
     ['iurii', 'iurii']
 ]
 
-
-server = flask.Flask('app')
-server.secret_key = os.environ.get('secret_key', 'secret')
 
 #app = dash.Dash('app', server=server)
 
