@@ -18,7 +18,7 @@ VALID_USERNAME_PASSWORD_PAIRS = [
 ]
 
 
-server = flask.Flask('auth')
+server = flask.Flask('app')
 server.secret_key = os.environ.get('secret_key', 'secret')
 
 #app = dash.Dash('app', server=server)
