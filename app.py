@@ -10,6 +10,7 @@ import flask
 import os
 import plotly
 import wfdb
+import plotly.tools as tls
 
 
 # Keep this out of source code repository - save in a file or a database
@@ -61,12 +62,12 @@ def update_graph(selected_dropdown_value):
 	annotation = wfdb.rdann(os.path.realpath('.') + '\\sampledata\\' + selected_dropdown_value, 'atr', sampto = 3500)
 	
     return {
-        wfdb.plotrec(record,
-             annotation = annotation,
-             title='Record ' + selected_dropdown_value + 'from MIT-BIH Arrhythmia Database',
-             timeunits = 'seconds',
-             figsize = (15,7),
-             ecggrids = 'all')
+        tls.mpl_to_plotly(wfdb.plotrec(record,
+										 annotation = annotation,
+										 title='Record ' + selected_dropdown_value + 'from MIT-BIH Arrhythmia Database',
+										 timeunits = 'seconds',
+										 figsize = (15,7),
+										 ecggrids = 'all'))
     }
 
 
