@@ -1,3 +1,9 @@
+VALID_USERNAME_PASSWORD_PAIRS = [
+    ['iurii', 'iurii'],
+	['anna', 'anna'],
+	['alex', 'alex']
+]
+
 import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
@@ -24,12 +30,6 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 #app = dash.Dash('app', server=server)
 
 app = dash.Dash('auth', server=server)
-
-VALID_USERNAME_PASSWORD_PAIRS = [
-    ['iurii', 'iurii'],
-	['anna', 'anna'],
-	['alex', 'alex']
-]
 
 auth = dash_auth.BasicAuth(
     app,
