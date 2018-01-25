@@ -11,6 +11,9 @@ import os
 import plotly
 import wfdb
 import plotly.tools as tls
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
 import tkinter
 import _tkinter
 
