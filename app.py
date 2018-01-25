@@ -63,8 +63,8 @@ app.layout = html.Div([
 @app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
 
-	record = wfdb.rdsamp(os.path.realpath('.') + '\\sampledata\\' + selected_dropdown_value, sampto = 3500)
-	annotation = wfdb.rdann(os.path.realpath('.') + '\\sampledata\\' + selected_dropdown_value, 'atr', sampto = 3500)
+	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 3500)
+	annotation = wfdb.rdann(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, 'atr', sampto = 3500)
 	
 	return tls.mpl_to_plotly(wfdb.plotrec(record, annotation = annotation, title='Record ' + selected_dropdown_value + 'from MIT-BIH Arrhythmia Database', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
 
