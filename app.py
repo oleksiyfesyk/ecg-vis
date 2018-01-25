@@ -12,7 +12,8 @@ import plotly
 import wfdb
 import plotly.tools as tls
 import matplotlib
-matplotlib.use('agg')
+matplotlib.use('Agg')
+from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import tkinter
 import _tkinter
