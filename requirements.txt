@@ -23,6 +23,7 @@ Jinja2==2.9.6
 jsonschema==2.6.0
 jupyter-core==4.3.0
 MarkupSafe==1.0
+matplotlib==2.1.1
 nbformat==4.3.0
 numpy==1.13.0
 pandas==0.20.2
