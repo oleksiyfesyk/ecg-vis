@@ -8,7 +8,7 @@ import dash_auth
 import flask
 #import time
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('GDK')
 import matplotlib.pyplot as plt
 import os
 import plotly
