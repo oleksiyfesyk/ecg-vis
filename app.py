@@ -49,9 +49,9 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Subject 100', 'value': 'aami3a'}
+            {'label': 'Subject 100', 'value': 'aami3a'},
             {'label': 'Subject 101', 'value': 'aami3b'},
-            {'label': 'Subject 102', 'value': 'aami3c'},
+            {'label': 'Subject 102', 'value': 'aami3c'}
 #			{'label': 'Subject 103', 'value': '103'},
 #			{'label': 'Subject 104', 'value': '104'}
         ],
