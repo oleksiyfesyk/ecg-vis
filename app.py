@@ -64,7 +64,7 @@ app.layout = html.Div([
 @app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
 
-	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 1500)
+	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 1242) #Ice battle
 	
 	d_signal = record.adc()[:,0]
 	print(d_signal, file=sys.stderr)
