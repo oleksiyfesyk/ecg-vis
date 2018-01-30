@@ -76,9 +76,9 @@ def update_graph(selected_dropdown_value):
 			result.append(x[i+1] - x[i])
 		return result
 	sample = np.asarray(increments(sorted(peak_indices)), dtype=float)
-	mean = np.mean(sample)
-	sd = np.std(sample)
-	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database (Mean = ' + mean + ' ms, SD = ' + sd + ' ms)', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
+	mean = round(np.mean(sample), 2)
+	sd = round(np.std(sample), 3)
+	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database (Mean = ' + str(mean) + ' ms, SD = ' + str(sd) + ' ms)', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
 
 
 
