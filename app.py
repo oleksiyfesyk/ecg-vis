@@ -12,6 +12,7 @@ import plotly
 import wfdb
 import plotly.tools as tls
 import numpy as np
+import sys
 
 def increments(x):
 		result = []
@@ -65,6 +66,7 @@ app.layout = html.Div([
 def update_graph(selected_dropdown_value):
 
 	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 750)
+	print(record, file=sys.stderr)
 	d_signal = record.adc()[:,0]
 	
 	peak_indices_detect = wfdb.processing.gqrs_detect(d_signal, fs=record.fs, adcgain=record.adcgain[0], adczero=record.adczero[0], threshold=1.0)
