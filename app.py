@@ -5,7 +5,7 @@ import dash_html_components as html
 import dash_auth
 import flask
 import matplotlib
-matplotlib.use('macosx')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 import plotly
@@ -42,18 +42,16 @@ dcc._js_dist[0]['external_url'] = 'https://cdn.plot.ly/plotly-basic-latest.min.j
 
 app.layout = html.Div([
 	html.H2('Welcome to the app'),
-    html.H4('You are successfully authorized'),
-    html.H1('MIT-BIH Arrhythmia'),
+    html.H5('You are successfully authorized'),
+    html.H1('MIT-BIH Arrhythmia Database'),
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Subject aami3a', 'value': 'aami3a'},
-            {'label': 'Subject aami3b', 'value': 'aami3b'},
-            {'label': 'Subject aami3c', 'value': 'aami3c'}
-#			{'label': 'Subject 103', 'value': '103'},
-#			{'label': 'Subject 104', 'value': '104'}
+            {'label': 'Subject 1', 'value': '102'},
+            {'label': 'Subject 2', 'value': '104'},
+            {'label': 'Subject 3', 'value': '202'}
         ],
-        value='aami3a'
+        value='102'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
@@ -61,10 +59,25 @@ app.layout = html.Div([
 @app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
 
-	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 3500)
-#	annotation = wfdb.rdann(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, 'atr', sampto = 3500)
-#	annotation = annotation, 
-	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
+	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 750)
+	d_signal = record.adc()[:,0]
+	
+	min_bpm = 20
+    max_bpm = 230
+    min_gap = record.fs*60/min_bpm
+    max_gap = record.fs*60/max_bpm
+    peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
+
+	def increments(x):
+    result = []
+    for i in range(len(x) - 1):
+        result.append(x[i+1] - x[i])
+    return result
+		
+	sample = increments(sorted(peak_indices))
+	mean = np.mean(sample)
+	sd = np.std(sample)
+	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database (Mean = ' + mean + ' ms, SD = ' + sd + ' ms)', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
 
 
 
