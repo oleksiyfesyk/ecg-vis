@@ -13,7 +13,11 @@ import wfdb
 import plotly.tools as tls
 import numpy as np
 
-
+def increments(x):
+		result = []
+		for i in range(len(x) - 1):
+			result.append(x[i+1] - x[i])
+		return result
 
 server = flask.Flask('app')
 server.secret_key = os.environ.get('secret_key', 'secret')
@@ -70,11 +74,6 @@ def update_graph(selected_dropdown_value):
 	min_gap = record.fs*60/min_bpm
 	max_gap = record.fs*60/max_bpm
 	peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices_detect, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
-	def increments(x):
-		result = []
-		for i in range(len(x) - 1):
-			result.append(x[i+1] - x[i])
-		return result
 	sample = np.asarray(increments(sorted(peak_indices)), dtype=float)
 	mean = round(np.mean(sample), 2)
 	sd = round(np.std(sample), 3)
