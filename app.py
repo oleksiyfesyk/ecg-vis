@@ -61,19 +61,16 @@ def update_graph(selected_dropdown_value):
 
 	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 750)
 	d_signal = record.adc()[:,0]
-	
 	min_bpm = 20
-    max_bpm = 230
-    min_gap = record.fs*60/min_bpm
-    max_gap = record.fs*60/max_bpm
-    peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
-
+	max_bpm = 230
+	min_gap = record.fs*60/min_bpm
+	max_gap = record.fs*60/max_bpm
+	peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
 	def increments(x):
-    result = []
-    for i in range(len(x) - 1):
-        result.append(x[i+1] - x[i])
-    return result
-		
+		result = []
+		for i in range(len(x) - 1):
+			result.append(x[i+1] - x[i])
+		return result
 	sample = increments(sorted(peak_indices))
 	mean = np.mean(sample)
 	sd = np.std(sample)
