@@ -15,10 +15,10 @@ import numpy as np
 import sys
 
 def increments(x):
-		result = []
-		for i in range(len(x) - 1):
-			result.append(x[i+1] - x[i])
-		return result
+	result = []
+	for i in range(len(x) - 1):
+		result.append(x[i+1] - x[i])
+	return result
 
 server = flask.Flask('app')
 server.secret_key = os.environ.get('secret_key', 'secret')
@@ -36,7 +36,6 @@ app = dash.Dash('app', server=server)
 #auth = dash_auth.BasicAuth(
 #    app,
 #    VALID_USERNAME_PASSWORD_PAIRS
-#)
 
 
 app.scripts.config.serve_locally = False
@@ -66,16 +65,20 @@ app.layout = html.Div([
 def update_graph(selected_dropdown_value):
 
 	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 750)
-	print(record, file=sys.stderr)
+	
 	d_signal = record.adc()[:,0]
+	print(d_signal, file=sys.stderr)
 	
 	peak_indices_detect = wfdb.processing.gqrs_detect(d_signal, fs=record.fs, adcgain=record.adcgain[0], adczero=record.adczero[0], threshold=1.0)
+	print(peak_indices_detect, file=sys.stderr)
 	
 	min_bpm = 20
 	max_bpm = 230
 	min_gap = record.fs*60/min_bpm
 	max_gap = record.fs*60/max_bpm
 	peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices_detect, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
+	print(peak_indices, file=sys.stderr)
+	
 	sample = np.asarray(increments(sorted(peak_indices)), dtype=float)
 	mean = round(np.mean(sample), 2)
 	sd = round(np.std(sample), 3)
