@@ -61,11 +61,14 @@ def update_graph(selected_dropdown_value):
 
 	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 750)
 	d_signal = record.adc()[:,0]
+	
+	peak_indices_detect = wfdb.processing.gqrs_detect(d_signal, fs=record.fs, adcgain=record.adcgain[0], adczero=record.adczero[0], threshold=1.0)
+	
 	min_bpm = 20
 	max_bpm = 230
 	min_gap = record.fs*60/min_bpm
 	max_gap = record.fs*60/max_bpm
-	peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
+	peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices_detect, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
 	def increments(x):
 		result = []
 		for i in range(len(x) - 1):
