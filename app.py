@@ -58,7 +58,7 @@ app.layout = html.Div([
 			#{'label': 'Subject 4', 'value': '233'},
             {'label': 'Subject 4', 'value': '212'}
         ],
-        value='102'
+        value='221'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
