@@ -3,10 +3,7 @@ from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_auth
-#from pandas_datareader import data as web
-#from datetime import datetime as dt
 import flask
-#import time
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -14,8 +11,14 @@ import os
 import plotly
 import wfdb
 import plotly.tools as tls
+import numpy as np
+import sys
 
-
+def increments(x):
+	result = []
+	for i in range(len(x) - 1):
+		result.append(x[i+1] - x[i])
+	return result
 
 server = flask.Flask('app')
 server.secret_key = os.environ.get('secret_key', 'secret')
@@ -27,26 +30,12 @@ server.secret_key = os.environ.get('secret_key', 'secret')
 #]
 
 
-#app = dash.Dash('app', server=server)
+app = dash.Dash('app', server=server)
 
 #app = dash.Dash('auth', server=server)
 #auth = dash_auth.BasicAuth(
 #    app,
 #    VALID_USERNAME_PASSWORD_PAIRS
-#)
-
-
-
-APP_NAME = 'Dash  App'
-APP_URL = 'https://ecg-vis.herokuapp.com/'
-
-app = dash.Dash('app', server=server)
-auth = dash_auth.PlotlyAuth(
-    app,
-    APP_NAME,
-    'private',
-    APP_URL
-)
 
 
 app.scripts.config.serve_locally = False
@@ -58,29 +47,51 @@ dcc._js_dist[0]['external_url'] = 'https://cdn.plot.ly/plotly-basic-latest.min.j
 
 app.layout = html.Div([
 	html.H2('Welcome to the app'),
-    html.H4('You are successfully authorized'),
-    html.H1('MIT-BIH Arrhythmia'),
-    dcc.Dropdown(
-        id='my-dropdown',
-        options=[
-            {'label': 'Subject 100', 'value': 'aami3a'},
-            {'label': 'Subject 101', 'value': 'aami3b'},
-            {'label': 'Subject 102', 'value': 'aami3c'}
-#			{'label': 'Subject 103', 'value': '103'},
-#			{'label': 'Subject 104', 'value': '104'}
-        ],
-        value='aami3a'
+    html.H5('You are successfully authorized'),
+    html.H1('MIT-BIH Arrhythmia Database'),
+    dcc.Upload(
+        id='upload-dat',
+        children=html.Div([
+            'Drag and Drop or ',
+            html.A('Select DAT File')
+        ]),
+        style={
+            'width': '100%',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '10px'
+        }
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
 
-@app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
-def update_graph(selected_dropdown_value):
-
-	record = wfdb.rdsamp(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, sampto = 3500)
-#	annotation = wfdb.rdann(os.path.realpath('.') + '/sampledata/' + selected_dropdown_value, 'atr', sampto = 3500)
-#	annotation = annotation, 
-	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
+@app.callback(Output('my-graph', 'figure'), [Input('upload-dat', 'contents'), Input('upload-hea', 'contents')])
+def update_graph(datFile, heaFile):
+	
+	print(datFile, file=sys.stderr)
+	record = wfdb.rdsamp(datFile, sampto = 1024) #2^10
+	
+	d_signal = record.adc()[:,0]
+	print(d_signal, file=sys.stderr)
+	
+	peak_indices_detect = wfdb.processing.gqrs_detect(d_signal, fs=record.fs, adcgain=record.adcgain[0], adczero=record.adczero[0], threshold=1.0)
+	print(peak_indices_detect, file=sys.stderr)
+	
+	min_bpm = 20
+	max_bpm = 230
+	min_gap = record.fs*60/min_bpm
+	max_gap = record.fs*60/max_bpm
+	peak_indices = wfdb.processing.correct_peaks(d_signal, peak_indices=peak_indices_detect, min_gap=min_gap, max_gap=max_gap, smooth_window=150)
+	print(peak_indices, file=sys.stderr)
+	
+	sample = np.asarray(increments(sorted(peak_indices)), dtype=float)
+	mean = round(np.mean(sample), 2)
+	sd = round(np.std(sample), 3)
+	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from MIT-BIH Arrhythmia Database (Mean = ' + str(mean) + ' ms, SD = ' + str(sd) + ' ms)', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
 
 
 
