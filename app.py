@@ -13,6 +13,8 @@ import wfdb
 import plotly.tools as tls
 import numpy as np
 import sys
+import base64
+import io
 
 def increments(x):
 	result = []
@@ -49,24 +51,52 @@ app.layout = html.Div([
 	html.H2('Welcome to the app'),
     html.H5('You are successfully authorized'),
     html.H1('MIT-BIH Arrhythmia Database'),
-    dcc.Dropdown(
-        id='my-dropdown',
-        options=[
-            {'label': 'Subject 1', 'value': '221'},
-            {'label': 'Subject 2', 'value': '234'},
-            {'label': 'Subject 3', 'value': '102'},
-			#{'label': 'Subject 4', 'value': '233'},
-            {'label': 'Subject 4', 'value': '212'}
-        ],
-        value='221'
-    ),
-    dcc.Graph(id='my-graph')
+	dcc.Upload(
+		id='upload-dat',
+		children=html.Div([
+			'Drag and Drop or ',
+			html.A('Select DAT File')
+		]),
+		style={
+			'width': '100%',
+			'height': '60px',
+			'lineHeight': '60px',
+			'borderWidth': '1px',
+			'borderStyle': 'dashed',
+			'borderRadius': '5px',
+			'textAlign': 'center',
+			'margin': '10px'
+		},
+		multiple=False
+	),
+	dcc.Upload(
+		id='upload-hea',
+		children=html.Div([
+			'Drag and Drop or ',
+			html.A('Select HEA File')
+		]),
+		style={
+			'width': '100%',
+			'height': '60px',
+			'lineHeight': '60px',
+			'borderWidth': '1px',
+			'borderStyle': 'dashed',
+			'borderRadius': '5px',
+			'textAlign': 'center',
+			'margin': '10px'
+		},
+		multiple=False
+	),
+	dcc.Graph(id='my-graph')
 ], className="container")
 
-@app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
-def update_graph(selected_dropdown_value):
-	path = os.path.realpath('.') + '/sampledata/' + selected_dropdown_value
-	record = wfdb.rdsamp(path, path, sampto = 1024) #2^10
+@app.callback(Output('my-graph', 'figure'), [Input('upload-dat', 'contents'), Input('upload-hea', 'contents')])
+def update_graph(upload_dat, upload_hea):
+	
+	record_dat = io.StringIO(base64.b64decode(upload_dat))
+	record_hea = io.StringIO(base64.b64decode(upload_hea))
+	
+	record = wfdb.rdsamp(record_dat, record_hea, sampto = 1024) #2^10
 	
 	d_signal = record.adc()[:,0]
 	print(d_signal, file=sys.stderr)
