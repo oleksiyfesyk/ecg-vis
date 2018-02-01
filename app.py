@@ -52,11 +52,11 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Subject 1', 'value': '102'},
-            {'label': 'Subject 2', 'value': '104'},
-            {'label': 'Subject 3', 'value': '202'}
+            {'label': 'Subject 1', 'value': '223'},
+            {'label': 'Subject 2', 'value': '230'},
+            {'label': 'Subject 3', 'value': '234'}
         ],
-        value='102'
+        value='223'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
