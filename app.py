@@ -52,11 +52,11 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='my-dropdown',
         options=[
-            {'label': 'Subject 1', 'value': '223'},
-            {'label': 'Subject 2', 'value': '230'},
+            {'label': 'Subject 1', 'value': '221'},
+            {'label': 'Subject 2', 'value': '233'},
             {'label': 'Subject 3', 'value': '234'}
         ],
-        value='223'
+        value='221'
     ),
     dcc.Graph(id='my-graph')
 ], className="container")
@@ -82,7 +82,7 @@ def update_graph(selected_dropdown_value):
 	sample = np.asarray(increments(sorted(peak_indices)), dtype=float)
 	mean = round(np.mean(sample), 2)
 	sd = round(np.std(sample), 3)
-	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from ANSI/AAMI EC13 Database (Mean = ' + str(mean) + ' ms, SD = ' + str(sd) + ' ms)', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
+	return tls.mpl_to_plotly(wfdb.plotrec(record, title='Record ' + selected_dropdown_value + ' from MIT-BIH Arrhythmia Database (Mean = ' + str(mean) + ' ms, SD = ' + str(sd) + ' ms)', timeunits = 'seconds', figsize = (15,7), returnfig = True, ecggrids = 'all'))
 
 
 
